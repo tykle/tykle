@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  node-test-0:
+    image: tykle/node
+    volumes:
+      - .:/tykle/dev
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        node bin/index run -mcast -tcp4 -p 0 -v 0 -i eth0
