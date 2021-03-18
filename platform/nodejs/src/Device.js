@@ -19,6 +19,10 @@ class NodeJSDevice extends Device {
     }
 
     bootFromFile(options, loaded) {
+        this.options = options;
+
+        options.verbosity = options.hasOwnProperty("verbosity") ? options.verbosity : 1;
+
         fs.readFile(options.kernelFile, (err, data) => {
             if (err) {
                 console.log(err);
@@ -153,28 +157,39 @@ class NodeJSDevice extends Device {
 
         if (chan.length > this.logPaddingChan) this.logPaddingChan = chan.length;
         chan += ' '.repeat(this.logPaddingChan - chan.length);
-
+        
         // coloring type
         switch (message.type) {
-            case 'success': type = chalk.green(type); break;
-            case 'info': type = chalk.grey(type); break;
-            case 'error':
-            case 'fatal': type = chalk.red(type); break;
-            case 'warning': type = chalk.yellow(type); break;
-            case 'debug': return;// type = chalk.blue(type); break;
-        }
+            // verbosity 1
+            case 'success':
+                if (this.options.verbosity < 1) return;
+                type = chalk.green(type);
+                break;
 
-        // rand hash
-        // var track;
-        // var round = 0;
-        // do {
-        //     track = crc32(chan + round).toString(16);
-        //     var rgb = parseInt(track, 16);
-        //     var r = (rgb >> 16) & 0xff;
-        //     var g = (rgb >> 8) & 0xff;
-        //     var b = (rgb >> 0) & 0xff;
-        //     var luma = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-        // } while (luma < 40);
+            case 'info':
+                if (this.options.verbosity < 1) return;
+                type = chalk.grey(type);
+                break;
+
+            // verbosity -1
+            case 'error':
+            case 'fatal':
+                if (this.options.verbosity < -1) return;
+                type = chalk.red(type);
+                break;
+
+            // verbosity 0
+            case 'warning':
+                if (this.options.verbosity < 0) return;
+                type = chalk.yellow(type);
+                break;
+
+            // verbosity 2
+            case 'debug':
+                if (this.options.verbosity < 2) return;
+                type = chalk.blue(type);
+                break;
+        }
 
         const rec = 100;
         var track = crc32(chan);
@@ -182,28 +197,27 @@ class NodeJSDevice extends Device {
         var g = (track >> 8) & 0xff;
         var b = (track >> 0) & 0xff;
 
-        if(r < rec) r = rec+r;
-        if(g < rec) g = rec+g;
-        if(b < rec) b = rec+b;
+        if (r < rec) r = rec + r;
+        if (g < rec) g = rec + g;
+        if (b < rec) b = rec + b;
 
         // console.log(r, g, b)
         chan = chalk.rgb(r, g, b)(chan);
 
         function fixZero(i) {
-            if(i<10) return(`00${i}`)
-            if(i<100) return(`0${i}`)
-            return(`${i}`)
+            if (i < 10) return (`00${i}`)
+            if (i < 100) return (`0${i}`)
+            return (`${i}`)
         }
 
         // compute current chest
         var chest = " - / - ";
-        if(this.memory && this.memory.chest) {
+        if (this.memory && this.memory.chest) {
             const circuit = this.memory.chest.circuit;
-            if(!circuit) chest = "?/?";
+            if (!circuit) chest = "?/?";
             else chest = `${fixZero(circuit.pnid)}/${fixZero(circuit.vid)}`;
-            
+
         }
-        
 
         console.log(`[${message.date.toLocaleString()}] [${chest}] ${type} ${chan} | ${message.message}`)
     }

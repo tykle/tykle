@@ -80,6 +80,7 @@ function testWhite(x) {
 function ready(options, cb) {
     const platform = require("../platform/nodejs")
     options.mode = "anon";
+    options.verbosity = 0;
 
     // create platform
     const device = new platform.Device()
@@ -135,16 +136,9 @@ const wallet = sc.command('wallet', {
 wallet.command('list', {
     desc: 'List all chests in the wallet',
     callback: function (options) {
-        const platform = require("../platform/nodejs")
-        options.mode = "anon";
-
-        // create platform
-        const device = new platform.Device()
-
         const cHead = chalk.rgb(173, 255, 47).bold;
 
-        // boot from local file
-        device.bootFromFile(options, (memory, finished) => {
+        ready(options, async (memory, finished) => {
             const Tykle = memory.proto.Tykle;
 
             // load wallet
@@ -152,8 +146,9 @@ wallet.command('list', {
 
             // nonce / type / 
             const data = [[
-                'Index',
+                '',
                 'Ref',
+                'State',
                 'Type',
                 'Circuit',
                 'Name',
@@ -166,9 +161,15 @@ wallet.command('list', {
                 var cirStr = " ? / ? ";;
                 if (chest.circuit) cirStr = `${fixZero(chest.circuit.pnid)}/${fixZero(chest.circuit.vid)}`;
 
+                var state = "PUBLIC";
+                if(chest.private) {
+                    state = `PRIVATE ${chest.private.locked === true ? 'LOCKED' : 'UNLOCKED'}`
+                }
+                
                 const insert = [
                     a,
                     chest.public.nonce.toString("hex"),
+                    state,
                     chest.public.type === Tykle.Wallet.Chest.Type.IS_NODE ? 'NODE' : 'USER',
                     `[${cirStr}]`,
                     chest.name || 'N/A',
@@ -176,21 +177,35 @@ wallet.command('list', {
                     chest.public.ecdh.toString("base64"),
                 ]
                 data.push(insert)
-                // console.log(chest)
             }
 
             const config = {
                 columns: {
-                    4: { width: 30 },
+                    2: { width: 8 },
                     5: { width: 30 },
-                    6: { width: 30 }
+                    6: { width: 30 },
+                    7: { width: 30 }
                 }
             };
 
-            const output = table(data, config);
-            console.log(output);
+            if (options.json === true) {
+                console.log(JSON.stringify(List, null, "  "));
+            }
+            else {
+                const output = table(data, config);
+                console.log(`# Tykle Wallet: ${List.name} with ${List.items.length} chests`)
+                console.log(output);
+            }
+
+            process.exit(0);
         })
+
     }
+}).option('json', {
+    abbr: 'json',
+    desc: 'JSON output',
+    default: false,
+    flag: true
 });
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
