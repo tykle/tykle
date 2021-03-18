@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const sc = require('subcommander');
 const fs = require('fs');
 const crypto = require('crypto');
