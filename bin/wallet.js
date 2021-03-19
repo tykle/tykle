@@ -3,6 +3,7 @@ const fs = require('fs');
 const { table } = require('table');
 const chalk = require('chalk');
 
+const loader = require('./_loader');
 
 function loadList(Tykle, walletFile) {
     var List;
@@ -89,39 +90,16 @@ function ready(options, cb) {
     device.bootFromFile(options, cb)
 }
 
-// select default directory
-var defaultDir;
-try {
-    defaultDir = fs.realpathSync(`${process.env.HOME}`);
-} catch (e) {
-    console.log(e)
-}
-if (!defaultDir) defaultDir = "/root/.tykle";
-else defaultDir += "/.tykle";
-
-// create wallet directory
-try {
-    const st = fs.statSync(defaultDir);
-} catch (e) {
-    try {
-        fs.mkdirSync(defaultDir);
-        fs.mkdirSync(defaultDir + "/data");
-    } catch (e) {
-        console.log(e)
-        process.exit(-1);
-    }
-}
-
 const wallet = sc.command('wallet', {
     desc: 'Tykle Wallet'
 }).option('dataDir', {
     abbr: 'd',
     desc: 'Specify data directory',
-    default: `${defaultDir}/data`
+    default: `${loader.defaultWalletDir}/data`
 }).option('walletFile', {
     abbr: 'f',
     desc: 'Specify wallet file to operate',
-    default: `${defaultDir}/main.tkw`
+    default: `${loader.defaultWalletDir}/main.tkw`
 }).option('kernelFile', {
     abbr: 'k',
     desc: 'Specify kernel file to load',

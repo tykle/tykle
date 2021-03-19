@@ -15,7 +15,7 @@ RUN wget http://download.redis.io/redis-stable.tar.gz && \
     npm install -g concurrently   
 
 # Create app directory
-WORKDIR /tykle/app
+WORKDIR /tykle
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
@@ -26,11 +26,8 @@ WORKDIR /tykle/app
 # RUN npm ci --only=production
 
 # Bundle app source
-COPY . .
-
-RUN npm install
 RUN mkdir /tykle/data
-RUN cp /tykle/app/data/boot-trust.cct /tykle/data
+RUN npm install tykle -g
 
 EXPOSE 1919
 # CMD [ "node", "server.js" ]
