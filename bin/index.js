@@ -12,16 +12,18 @@ console.pretty = function (msg) {
     console.log(msg)
 }
 
-
 sc.command('run', {
     desc: 'Run Tykle CCT',
     callback: function (options) {
 
         const platform = require("../platform/nodejs")
         options.mode = "node";
+        options.verbosity = parseInt(options.level);
 
         // create platform
         const device = new platform.Device()
+
+        
 
         // boot from local file
         device.bootFromFile(options, (memory, finished) => {
@@ -153,6 +155,10 @@ sc.command('run', {
     abbr: 'http',
     desc: 'Start HTTP Service',
     flag: true
+}).option('level', {
+    abbr: 'l',
+    desc: 'Specify error level',
+    default: 1
 });
 
 
