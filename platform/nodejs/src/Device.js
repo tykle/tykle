@@ -161,11 +161,6 @@ class NodeJSDevice extends Device {
         // coloring type
         switch (message.type) {
             // verbosity 1
-            case 'success':
-                if (this.options.verbosity < 1) return;
-                type = chalk.green(type);
-                break;
-
             case 'info':
                 if (this.options.verbosity < 1) return;
                 type = chalk.grey(type);
@@ -179,6 +174,11 @@ class NodeJSDevice extends Device {
                 break;
 
             // verbosity 0
+            case 'success':
+                if (this.options.verbosity < 0) return;
+                type = chalk.green(type);
+                break;
+                
             case 'warning':
                 if (this.options.verbosity < 0) return;
                 type = chalk.yellow(type);

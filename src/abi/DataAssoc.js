@@ -43,7 +43,7 @@ class signderivaMemAssoc {
         //     });
         // }
         // await later(100);
-        
+
         const key = 'H-' + hash.toString("base64");
         return (await this.getLCD(key))
     }
@@ -60,7 +60,7 @@ class signderivaMemAssoc {
         //         setTimeout(resolve, delay);
         //     });
         // }
- 
+
         // await later(1100)
 
         const f = async (c) => {
@@ -91,7 +91,9 @@ class signderivaMemAssoc {
             return (ret)
         }
         else {
-            return ((await this.getLCDVault(circuit)).vault.invoke)
+            const r = (await this.getLCDVault(circuit));
+            if (r && r.vault && r.vault.invoke) return (r.vault.invoke);
+            return (null)
         }
     }
 

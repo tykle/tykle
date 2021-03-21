@@ -1,9 +1,10 @@
 version: "3.9"
 services:
-  tykle:
+    
+
+  node-prod-0:
     image: tykle/node
     volumes:
-      - .:/tykle/app
       - ~/.tykle:/root/.tykle
     tty: true
     command: 
@@ -12,4 +13,552 @@ services:
       - |
         uname -a
         node -v
+        cd /tykle/dev
         tykle run -mcast -tcp4 -p 0 -v 0 -i eth0 -d /tykle/data
+
+  node-prod-1:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 1 -i eth0 -d /tykle/data
+
+  node-prod-2:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 2 -i eth0 -d /tykle/data
+
+  node-prod-3:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 3 -i eth0 -d /tykle/data
+
+  node-prod-4:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 4 -i eth0 -d /tykle/data
+
+  node-prod-5:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 5 -i eth0 -d /tykle/data
+
+  node-prod-6:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 6 -i eth0 -d /tykle/data
+
+  node-prod-7:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 7 -i eth0 -d /tykle/data
+
+  node-prod-8:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 8 -i eth0 -d /tykle/data
+
+  node-prod-9:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 9 -i eth0 -d /tykle/data
+
+  node-prod-10:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 10 -i eth0 -d /tykle/data
+
+  node-prod-11:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 11 -i eth0 -d /tykle/data
+
+  node-prod-12:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 12 -i eth0 -d /tykle/data
+
+  node-prod-13:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 13 -i eth0 -d /tykle/data
+
+  node-prod-14:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 14 -i eth0 -d /tykle/data
+
+  node-prod-15:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 15 -i eth0 -d /tykle/data
+
+  node-prod-16:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 16 -i eth0 -d /tykle/data
+
+  node-prod-17:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 17 -i eth0 -d /tykle/data
+
+  node-prod-18:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 18 -i eth0 -d /tykle/data
+
+  node-prod-19:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 19 -i eth0 -d /tykle/data
+
+  node-prod-20:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 20 -i eth0 -d /tykle/data
+
+  node-prod-21:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 21 -i eth0 -d /tykle/data
+
+  node-prod-22:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 22 -i eth0 -d /tykle/data
+
+  node-prod-23:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 23 -i eth0 -d /tykle/data
+
+  node-prod-24:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 24 -i eth0 -d /tykle/data
+
+  node-prod-25:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 25 -i eth0 -d /tykle/data
+
+  node-prod-26:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 26 -i eth0 -d /tykle/data
+
+  node-prod-27:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 27 -i eth0 -d /tykle/data
+
+  node-prod-28:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 28 -i eth0 -d /tykle/data
+
+  node-prod-29:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 29 -i eth0 -d /tykle/data
+
+  node-prod-30:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 30 -i eth0 -d /tykle/data
+
+  node-prod-31:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 31 -i eth0 -d /tykle/data
+
+  node-prod-32:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 32 -i eth0 -d /tykle/data
+
+  node-prod-33:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 33 -i eth0 -d /tykle/data
+
+  node-prod-34:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 34 -i eth0 -d /tykle/data
+
+  node-prod-35:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 35 -i eth0 -d /tykle/data
+
+  node-prod-36:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 36 -i eth0 -d /tykle/data
+
+  node-prod-37:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 37 -i eth0 -d /tykle/data
+
+  node-prod-38:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 38 -i eth0 -d /tykle/data
+
+  node-prod-39:
+    image: tykle/node
+    volumes:
+      - ~/.tykle:/root/.tykle
+    tty: true
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        uname -a
+        node -v
+        cd /tykle/dev
+        tykle run -mcast -tcp4 -p 0 -v 39 -i eth0 -d /tykle/data
+

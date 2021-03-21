@@ -31,7 +31,11 @@ function NodeJSNetMcast(memory, host, port) {
     const link = new LinkMcast(memory, server);
 
     server.on('message', async (msg, rinfo) => {
-        await memory.network.channel.read(link, msg);
+        const Tykle = memory.proto.Tykle;
+        try {
+            const oPacket = Tykle.N2N.Public.Discovery.decode(msg);
+            memory.network.discovery.setMeetingPoint(oPacket);
+        } catch (e) { }
     });
 
     server.bind(MCAST_PORT, async () => {
@@ -39,8 +43,6 @@ function NodeJSNetMcast(memory, host, port) {
         server.setMulticastTTL(128);
         server.addMembership(MCAST_ADDR);
         Kernel.log.info(`Multicast service Listening on ${host}:${port} catching ${MCAST_ADDR}`, ['abi', 'net', 'mcast']);
-        link.ready = true;
-        await memory.network.channel.register(link);
     });
 
     return (link);

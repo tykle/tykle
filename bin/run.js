@@ -12,8 +12,8 @@ const loader = require('./_loader');
 
 sc.command('run', {
     desc: 'Run Tykle CCT',
-    callback: function (options) {
-
+    callback: async function (options) {
+        const reserved = {};
         const platform = require("../platform/nodejs")
         options.mode = "node";
         options.verbosity = parseInt(options.level);
@@ -22,7 +22,7 @@ sc.command('run', {
         const device = new platform.Device()
 
         // boot from local file
-        device.bootFromFile(options, (memory, finished) => {
+        device.bootFromFile(options, async (memory, finished) => {
             const Tykle = memory.proto.Tykle;
             const Type = Tykle.N2N.PhyLink.Type;
             const Kernel = memory.kernel;
@@ -69,57 +69,53 @@ sc.command('run', {
 
             memory.kernel.start(options.mode, select)
 
-            function inter(str) {
-                const ret = [];
-                const list = str.split(",")
-                const cards = os.networkInterfaces()
-                for (var a in list) {
-                    const interface = list[a];
+            // load discovery packet
+            const discoveryFile = `${loader.defaultWalletDir}/selfDiscovery.phy`;
+            const discovery = loader.loadDiscovery(Tykle, { discoveryFile });
+            if (!discovery) {
+                console.log(`Error loading discovery packet, try: tykle discovery create tcp4://your-ip:1313`);
+                process.exit(-1);
+            }
 
-                    if (!cards[interface]) {
-                        console.log(`Cannot find interface ${interface}`);
-                        process.exit(-1);
-                    }
+            // broadcast my last heartbeat
+            var early = false;
+            await Kernel.newTask("Discovery Updater", true, async (task) => {
+                const discovery = loader.loadDiscovery(Tykle, { discoveryFile });
+                if (!discovery) return (task.sched(1000));
 
-                    for (var b in cards[interface]) {
-                        const ip = cards[interface][b];
-                        ret.push({
-                            ...ip,
-                            interface
-                        })
+                // if (early !== true) {
+                    // load very early phy
+                    const dirs = fs.readdirSync("./data/phy")
+                    for (var a in dirs) {
+                        const phyFile = `./data/phy/${dirs[a]}`;
+                        const data = fs.readFileSync(phyFile);
+                        const toLoad = Tykle.N2N.Public.Discovery.decode(data);
+                        memory.network.discovery.setMyMeetingPoint(toLoad);
                     }
+                    // early = true;
+                // }
+
+                // imform the kernel
+                memory.network.discovery.setMyMeetingPoint(discovery);
+
+                // broadcast to multicast
+                if (reserved.mcaster) {
+                    const ePacket = Tykle.N2N.Public.Discovery.encode(discovery).finish();
+                    await reserved.mcaster.write(ePacket);
                 }
-                return (ret);
-            }
 
-            var ips = [];
-            if (options.interfaces) {
-                ips = inter(options.interfaces);
-            }
+                task.sched(5000)
+            })
 
-            // start 
+            
+
+            // start tcp server
             if (options.tcp4 === true) {
-                const tcp4 = platform.Net.TCP(memory);
-
-                ips.map((item) => {
-                    if (item.family === "IPv4")
-                        memory.network.discovery.contactable(`tcp4://${item.address}`);
-                })
-
-                // memory.network.discovery.contactable("tcp4://");
-            }
-
-            if (options.reach) {
-                const list = options.reach.split(",")
-
-                for (var a in list) {
-                    const reach = list[a];
-                    memory.network.discovery.addStr(reach, true, true);
-                }
+                reserved.tcp4 = platform.Net.TCP(memory);
             }
 
             if (options.mcast === true) {
-                memory.network.discovery.addStr("mcast://", true, true);
+                reserved.mcaster = platform.Net.MCAST(memory);
             }
 
             finished()
@@ -143,12 +139,6 @@ sc.command('run', {
 }).option('vid', {
     abbr: 'v',
     desc: 'Vault ID to use'
-}).option('interfaces', {
-    abbr: 'i',
-    desc: 'Specify interface to combine with network services'
-}).option('reach', {
-    abbr: 'r',
-    desc: 'Specify PhyLink string to reach initialy'
 }).option('tcp4', {
     abbr: 'tcp4',
     desc: 'Start TCP4 Service',

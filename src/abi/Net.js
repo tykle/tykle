@@ -25,19 +25,19 @@ class Uouseur {
     }
 
     dispatch(channel, packet) {
-        if(!packet.sequence) return;
+        if (!packet.sequence) return;
         const key = packet.sequence.toString("hex");
         const exec = this._awaiting[key];
-        if(exec) {
-            if(exec.onReply) exec.onReply(null, channel, packet, exec.packet);
-            
+        if (exec) {
+            if (exec.onReply) exec.onReply(null, channel, packet, exec.packet);
+
             // exec.onReply
             delete this._awaiting[key];
         }
     }
 
     async request(packet, onReply, timeout) {
-        if(this.closed === true) return;
+        if (this.closed === true) return;
 
         const Device = this.memory.device;
 
@@ -45,7 +45,7 @@ class Uouseur {
         var id = null;
         do {
             packet.sequence = await Device.random(6);
-        } while(this._awaiting[packet.sequence.toString("hex")]);
+        } while (this._awaiting[packet.sequence.toString("hex")]);
 
         this._awaiting[packet.sequence.toString("hex")] = {
             packet, onReply, timeout
@@ -55,30 +55,36 @@ class Uouseur {
     }
 
     queue(buffer, onFinish, timeout) {
-        if(this.closed === true) return;
+        if (this.closed === true) return;
 
         timeout = timeout || 60;
         this._queue.push({ buffer, onFinish, timeout });
         if (this._queueLock !== true) {
             this._queueLock = true;
-            
-            setImmediate(async () => { 
+
+            setImmediate(async () => {
                 await this.dequeue();
             })
         }
     }
 
     async dequeue() {
+        // do not dequeue while channel is closed
+        if (this.closed === true) {
+            console.log("dequeue", this.ready, this.closed);
+            return;
+        }
+
         const item = this._queue.shift();
-        if(!item) {
+        if (!item) {
             this._queueLock = false;
             return;
         }
-        
+
         await this.write(item.buffer);
-        if(item.onFinish) await item.onFinish();
-        
-        setImmediate(async () => { 
+        if (item.onFinish) await item.onFinish();
+
+        setImmediate(async () => {
             await this.dequeue();
         })
     }

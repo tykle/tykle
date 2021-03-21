@@ -1,6 +1,6 @@
 FROM node:12
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get upgrade -y && apt-get install -y \
   dstat \
   traceroute \
   rsync
@@ -27,6 +27,7 @@ WORKDIR /tykle
 
 # Bundle app source
 RUN mkdir /tykle/data
+COPY data/ /tykle/data/
 RUN npm install tykle -g
 
 EXPOSE 1919

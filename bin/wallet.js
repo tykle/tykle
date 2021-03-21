@@ -5,78 +5,12 @@ const chalk = require('chalk');
 
 const loader = require('./_loader');
 
-function loadList(Tykle, walletFile) {
-    var List;
-    var data;
-    try {
-        data = fs.readFileSync(walletFile);
-    } catch (e) {
-        List = Tykle.Wallet.List.fromObject({ name: "New Wallet", items: [] });
-        return (List);
-    }
-
-    try {
-        List = Tykle.Wallet.List.decode(data);
-    } catch (e) {
-        console.log(`Error reading Wallet ${walletFile}: ${e.message}`)
-        process.exit(-1);
-    }
-
-    return (List);
-}
-
 function writeList(Tykle, walletFile, List) {
     const Packet = Tykle.Wallet.List.encode(List).finish();
     fs.writeFileSync(walletFile, Packet);
 }
 
-function fixZero(i) {
-    if (i < 10) return (`000${i}`)
-    if (i < 100) return (`00${i}`)
-    return (`${i}`)
-}
 
-function findRef(List, ref) {
-    var selected = null;
-    for (var a in List.items) {
-        const chest = List.items[a];
-
-        if (chest.public.nonce.toString("hex") === ref.toLowerCase()) {
-            selected = chest;
-            break;
-        }
-    }
-    return (selected);
-}
-
-function wordWrap(str, maxWidth) {
-    var newLineStr = "\n"; done = false; res = '';
-    while (str.length > maxWidth) {
-        found = false;
-        // Inserts new line at first whitespace of the line
-        for (i = maxWidth - 1; i >= 0; i--) {
-            if (testWhite(str.charAt(i))) {
-                res = res + [str.slice(0, i), newLineStr].join('');
-                str = str.slice(i + 1);
-                found = true;
-                break;
-            }
-        }
-        // Inserts new line at maxWidth position, the word is too long to wrap
-        if (!found) {
-            res += [str.slice(0, maxWidth), newLineStr].join('');
-            str = str.slice(maxWidth);
-        }
-
-    }
-
-    return res + str;
-}
-
-function testWhite(x) {
-    var white = new RegExp(/^\s$/);
-    return white.test(x.charAt(0));
-};
 
 function ready(options, cb) {
     const platform = require("../platform/nodejs")
@@ -120,7 +54,7 @@ wallet.command('list', {
             const Tykle = memory.proto.Tykle;
 
             // load wallet
-            var List = loadList(Tykle, options.walletFile);
+            var List = loader.loadWalletList(Tykle, options.walletFile);
 
             // nonce / type / 
             const data = [[
@@ -137,7 +71,7 @@ wallet.command('list', {
             for (var a in List.items) {
                 const chest = List.items[a];
                 var cirStr = " ? / ? ";;
-                if (chest.circuit) cirStr = `${fixZero(chest.circuit.pnid)}/${fixZero(chest.circuit.vid)}`;
+                if (chest.circuit) cirStr = `${loader.fixZero(chest.circuit.pnid)}/${loader.fixZero(chest.circuit.vid)}`;
 
                 var state = "PUBLIC";
                 if(chest.private) {
@@ -208,7 +142,7 @@ wallet.command('create', {
             const Kernel = memory.kernel;
 
             // load wallet
-            var List = loadList(Tykle, options.walletFile);
+            var List = loader.loadWalletList(Tykle, options.walletFile);
 
             // check if the
             const type = options.type.toLowerCase() === "node" ? Tykle.Wallet.Chest.Type.IS_NODE : Tykle.Wallet.Chest.Type.IS_USER
@@ -244,11 +178,11 @@ wallet.command('name', {
             const Tykle = memory.proto.Tykle;
 
             // load wallet
-            const List = loadList(Tykle, options.walletFile);
+            const List = loader.loadWalletList(Tykle, options.walletFile);
             const ref = options[0];
             const name = options[1];
 
-            var selected = findRef(List, ref);
+            var selected = loader.findWalletRef(List, ref);
             if (!selected) {
                 console.log(`Cannot find ${ref} chest in the wallet`);
                 process.exit(-1);
@@ -287,10 +221,10 @@ wallet.command('delete', {
             const Tykle = memory.proto.Tykle;
 
             // load wallet
-            const List = loadList(Tykle, options.walletFile);
+            const List = loader.loadWalletList(Tykle, options.walletFile);
             const ref = options[0];
 
-            var selected = findRef(List, ref);
+            var selected = loader.findWalletRef(List, ref);
             if (!selected) {
                 console.log(`Cannot find ${ref} chest in the wallet`);
                 process.exit(-1);
@@ -334,17 +268,17 @@ wallet.command('extract', {
             }
 
             // load list
-            const List = loadList(Tykle, options.walletFile);
+            const List = loader.loadWalletList(Tykle, options.walletFile);
 
             // get ref
-            var selected = findRef(List, ref);
+            var selected = loader.findWalletRef(List, ref);
             if (!selected) {
                 console.log(`Cannot find ${ref} chest in the wallet`);
                 process.exit(-1);
             }
 
             // load dst 
-            const ListDst = loadList(Tykle, dst);
+            const ListDst = loader.loadWalletList(Tykle, dst);
             ListDst.items.push(selected);
 
             // encode and write file
@@ -377,17 +311,17 @@ wallet.command('insert', {
             }
 
             // load list
-            const List = loadList(Tykle, from);
+            const List = loader.loadWalletList(Tykle, from);
 
             // get ref
-            var selected = findRef(List, ref);
+            var selected = loader.findWalletRef(List, ref);
             if (!selected) {
                 console.log(`Cannot find ${ref} chest in the wallet`);
                 process.exit(-1);
             }
 
             // load from 
-            const ListDst = loadList(Tykle, options.walletFile);
+            const ListDst = loader.loadWalletList(Tykle, options.walletFile);
             ListDst.items.push(selected);
 
             // encode and write file
@@ -418,10 +352,10 @@ wallet.command('share', {
             }
 
             // load list
-            const List = loadList(Tykle, options.walletFile);
+            const List = loader.loadWalletList(Tykle, options.walletFile);
 
             // get ref
-            var selected = findRef(List, ref);
+            var selected = loader.findWalletRef(List, ref);
             if (!selected) {
                 console.log(`Cannot find ${ref} chest in the wallet`);
                 process.exit(-1);
@@ -434,7 +368,7 @@ wallet.command('share', {
             const ePacket = Tykle.Wallet.Chest.encode(selected).finish();
 
             const buffer = `-----BEGIN TYKLE ${options.private !== true ? 'PUBLIC' : 'PRIVATE'} CHEST-----\n` +
-                wordWrap(ePacket.toString("base64"), 40) + '\n' +
+                loader.wordWrap(ePacket.toString("base64"), 40) + '\n' +
                 `-----END TYKLE ${options.private !== true ? 'PUBLIC' : 'PRIVATE'} CHEST-----`;
 
             console.log(buffer)

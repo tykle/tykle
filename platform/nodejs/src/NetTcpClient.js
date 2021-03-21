@@ -7,10 +7,9 @@ class NodeJSNetTcpClientSocket extends Net {
         super(memory);
         this.host = host;
         this.port = port;
-        this.ready = false;
         this.socket = null;
 
-
+        this.logOld = this.log;
         this.log = new this.memory.lib.Log(['tcp', "out"]);
     }
 
