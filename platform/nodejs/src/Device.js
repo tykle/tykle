@@ -1,7 +1,6 @@
 const crypto = require("crypto");
 const EC = require('elliptic').ec;
 const fs = require("fs");
-const log = require('fancylog');
 const chalk = require('chalk');
 const { crc32 } = require('crc');
 

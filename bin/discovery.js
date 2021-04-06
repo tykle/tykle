@@ -111,7 +111,7 @@ discovery.command('create', {
             Tykle.N2N.Public.Discovery.TkSign(Chest, oPacket);
 
             // write in the self dicovery
-            const discoverySelf = `${loader.defaultWalletDir}/selfDiscovery.phy`;
+            const discoverySelf = `${options.discoveryFile}`;
             const ePacket = Tykle.N2N.Public.Discovery.encode(oPacket).finish();
             fs.writeFileSync(discoverySelf, ePacket);
             console.pretty(oPacket)
