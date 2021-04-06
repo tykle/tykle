@@ -18,9 +18,9 @@ class NodeJSNetTcpClientSocket extends Net {
             return;
         }
         return(new Promise((resolve, reject) => {
-            const r = this.socket.write(buffer, resolve);
-            // if(r === false) this.socket.once('drain', resolve);
-            // else resolve();
+            const r = this.socket.write(buffer);
+            if(r === false) this.socket.once('drain', resolve);
+            else resolve();
         }));
     }
 

@@ -15,9 +15,9 @@ class NodeJSNetTcpServerSocket extends Net {
             return;
         }
         return (new Promise((resolve, reject) => {
-            const r = this.socket.write(buffer, resolve);
-            // if (r === false) this.socket.once('drain', resolve);
-            // else resolve();
+            const r = this.socket.write(buffer);
+            if (r === false) this.socket.once('drain', resolve);
+            else resolve();
         }));
     }
 
@@ -43,7 +43,7 @@ function NodeJSNetTcpServer(memory) {
         const user = new NodeJSNetTcpServerSocket(memory, socket);
 
         // registering connection into the kernel
-        await memory.network.channel.register(user, false);
+        await memory.network.channel.register(user, true);
 
         // change log 
         user.logOld = user.log;
