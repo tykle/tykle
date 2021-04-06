@@ -1,13 +1,17 @@
 class Uouseur {
     constructor(memory) {
         this.memory = memory;
+        this.init();
+
+        this.log = new this.memory.lib.Log(["channel"]);
+    }
+
+    init() {
         this.ready = false;
         this.readOnly = false;
         this._queue = [];
         this._awaiting = {}
         this._destructors = [];
-
-        this.log = new this.memory.lib.Log(["channel"]);
     }
 
     addDestructor(fct) {
@@ -54,6 +58,13 @@ class Uouseur {
         this.queue(ePacket);
     }
 
+    async requestLCDH(hash, cb) {
+        const Network = this.memory.network;
+        const rPacket = { lcd: { lcdHash: { hash } } }
+        const oPacket = await Network.requestObject(rPacket);
+        this.request(oPacket, cb);
+    }
+
     queue(buffer, onFinish, timeout) {
         if (this.closed === true) return;
 
@@ -71,7 +82,7 @@ class Uouseur {
     async dequeue() {
         // do not dequeue while channel is closed
         if (this.closed === true) {
-            console.log("dequeue", this.ready, this.closed);
+            this.init();
             return;
         }
 

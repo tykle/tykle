@@ -138,6 +138,16 @@ class NodeJSDevice extends Device {
     }
 
     logger(message) {
+
+        // if (this.memory && this.memory.chest) {
+        //     const circuit = this.memory.chest.circuit;
+        //     if (!circuit) return;
+
+        //     if (circuit.pnid != 0 || circuit.vid != 5) return;
+
+        // }
+        // else return;
+
         message.params = message.params || [];
 
         // remove null and undefined
@@ -157,7 +167,7 @@ class NodeJSDevice extends Device {
 
         if (chan.length > this.logPaddingChan) this.logPaddingChan = chan.length;
         chan += ' '.repeat(this.logPaddingChan - chan.length);
-        
+
         // coloring type
         switch (message.type) {
             // verbosity 1
@@ -178,7 +188,7 @@ class NodeJSDevice extends Device {
                 if (this.options.verbosity < 0) return;
                 type = chalk.green(type);
                 break;
-                
+
             case 'warning':
                 if (this.options.verbosity < 0) return;
                 type = chalk.yellow(type);

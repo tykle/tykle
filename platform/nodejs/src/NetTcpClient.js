@@ -14,11 +14,13 @@ class NodeJSNetTcpClientSocket extends Net {
     }
 
     async write(buffer) {
-        if(!this.socket) return;
+        if(!this.socket) {
+            return;
+        }
         return(new Promise((resolve, reject) => {
-            const r = this.socket.write(buffer);
-            if(r === false) this.socket.once('drain', resolve);
-            else resolve();
+            const r = this.socket.write(buffer, resolve);
+            // if(r === false) this.socket.once('drain', resolve);
+            // else resolve();
         }));
     }
 
@@ -50,13 +52,13 @@ function NodeJSNetTcpClient(memory, host, port) {
             user.logOld = user.log;
             user.log = new memory.lib.Log(['tcp', "out", user.id]);
 
-            user.log.info(`Client Connected to ${host}:${port}`);
+            user.log.debug(`Client Connected to ${host}:${port}`);
         });
         client.on('data', async (data) => {
             await memory.network.channel.read(user, data);
         });
         client.on('close', async () => {
-            user.log.info(`Client Disconnected from ${host}:${port}`);
+            user.log.debug(`Client Disconnected from ${host}:${port}`);
             user.log = user.logOld;
             await memory.network.channel.unregister(user);
             user.socket = null;
